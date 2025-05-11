@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Service for [Friend's Name]</title>
+    <style>
+        :root {
+            --dark-bg: #0a0a0a;
+            --blood-red: #ff5555;
+            --text-color: #d0d0d0;
+            --accent-color: #660000;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+            transition: all 2s ease;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeIn 3s ease-in;
+        }
+        
+        h1 {
+            color: var(--blood-red);
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            animation: pulse 4s infinite ease-in-out;
+        }
+        
+        h2 {
+            color: var(--blood-red);
+            font-size: 32px;
+            margin-bottom: 20px;
+            animation: pulse 4s infinite ease-in-out 1s;
+        }
+        
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .countdown {
+            font-size: 72px;
+            color: var(--blood-red);
+            margin: 30px 0;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        .guest-list {
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        
+        .guest-list h3 {
+            color: var(--blood-red);
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+        
+        .guest {
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: var(--blood-red);
+            color: var(--dark-bg);
+            padding: 10px 20px;
+            margin: 20px 0;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Times New Roman', serif;
+            border: none;
+        }
+        
+        .button:hover {
+            background-color: #ff0000;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        }
+        
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+        
+        .reveal {
+            display: none;
+            animation: fadeIn 3s ease-in;
+        }
+        
+        .reveal h1 {
+            font-size: 60px;
+        }
+        
+        .candle {
+            width: 40px;
+            height: 100px;
+            background: linear-gradient(to bottom, #ff5e00, #ffbb00);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            margin: 0 20px;
+            display: inline-block;
+            box-shadow: 0 0 20px rgba(255, 94, 0, 0.8);
+        }
+        
+        .candle::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 20px;
+            background: radial-gradient(ellipse at center, #ffff00 0%, #ff5e00 80%);
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.8);
+            animation: flicker 0.5s infinite alternate;
+        }
+        
+        .candles {
+            margin: 30px 0;
+        }
+        
+        .eulogy {
+            font-style: italic;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid var(--accent-color);
+            background-color: rgba(20, 20, 20, 0.7);
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes flicker {
+            0% { box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.8); height: 20px; }
+            100% { box-shadow: 0 0 25px 5px rgba(255, 255, 0, 0.9); height: 22px; }
+        }
+        
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        
+        .audio-controls:hover {
+            opacity: 1;
+        }
+        
+        .flicker {
+            animation: screenFlicker 0.1s infinite alternate;
+        }
+        
+        @keyframes screenFlicker {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container initial-screen">
+        <h1>Memorial Service</h1>
+        <h2>for [Friend's Name]</h2>
+        
+        <div class="candles">
+            <div class="candle"></div>
+            <div class="candle"></div>
+            <div class="candle"></div>
+        </div>
+        
+        <p>The ceremony will commence in:</p>
+        <div class="countdown" id="countdown">30</div>
+        
+        <p>Please remain silent as we prepare to honor the departed</p>
+    </div>
+    
+    <div class="container service-content hidden">
+        <h1>We Are Gathered Here Today</h1>
+        <p>To commemorate the life and times of our dear friend, [Friend's Name],<br>who is no longer with us... spiritually speaking.</p>
+        
+        <div class="guest-list" id="guestList">
+            <h3>In Attendance:</h3>
+            <div class="guest">• [Friend]'s mother, who always knew this day would come</div>
+            <div class="guest">• Jeff from Accounting, still waiting on those expense reports</div>
+            <div class="guest">• The guy who thought this was a buffet</div>
+            <div class="guest">• Three ex-partners arguing over who caused this</div>
+            <div class="guest">• [Friend]'s houseplant, somehow still alive</div>
+            <div class="guest">• The Grim Reaper (fashionably late)</div>
+        </div>
+        
+        <div class="eulogy" id="eulogy">
+            <h3>Eulogy</h3>
+            <p>[Friend's Name] lived as they died – mostly confused, occasionally inspired, and perpetually running late. They never met a deadline they couldn't miss or a pizza they couldn't finish. They survived countless all-nighters, questionable dating choices, and their own cooking, only to ultimately be defeated by everyday existence.</p>
+            <p>Their legacy includes hundreds of unread emails, several half-finished projects, and that one weird tweet nobody understood. We will remember them every time someone makes a terrible pun or eats dessert before dinner – as they always insisted was the proper order of things.</p>
+            <p>May they find in the afterlife what always eluded them in life: decent Wi-Fi and matching socks.</p>
+        </div>
+        
+        <a href="#" class="button" id="downloadButton">DOWNLOAD FINAL FAREWELL</a>
+    </div>
+    
+    <div class="container reveal" id="revealScreen">
+        <h1>FUNERAL CANCELLED</h1>
+        <h2>Surprise — You're Still Alive!</h2>
+        <p>Turns out you're only dead inside.</p>
+        <p>Happy breathing! Consider this your reminder that things could always be worse.</p>
+        <button class="button" id="replayButton">Try Again... if you dare</button>
+    </div>
+    
+    <div class="audio-controls">
+        <button id="toggleAudio" class="button">🔇</button>
+    </div>
+
+    <script>
+        // Audio elements
+        const organSound = new Audio();
+        organSound.src = "https://freesound.org/data/previews/414/414604_5121236-lq.mp3"; // Replace with actual URLs
+        organSound.loop = true;
+        organSound.volume = 0.4;
+        
+        const whispersSound = new Audio();
+        whispersSound.src = "https://freesound.org/data/previews/169/169986_1326576-lq.mp3"; // Replace with actual URLs
+        whispersSound.loop = true;
+        whispersSound.volume = 0.2;
+        
+        const thunderSound = new Audio();
+        thunderSound.src = "https://freesound.org/data/previews/377/377749_5836292-lq.mp3"; // Replace with actual URLs
+        thunderSound.volume = 0.6;
+        
+        // Global variables
+        let countdownTimer;
+        let audioPlaying = false;
+        const countdown = document.getElementById('countdown');
+        const guestList = document.getElementById('guestList');
+        const eulogy = document.getElementById('eulogy');
+        const downloadButton = document.getElementById('downloadButton');
+        const revealScreen = document.getElementById('revealScreen');
+        const replayButton = document.getElementById('replayButton');
+        const toggleAudioButton = document.getElementById('toggleAudio');
+        const initialScreen = document.querySelector('.initial-screen');
+        const serviceContent = document.querySelector('.service-content');
+        
+        // Start countdown when page loads
+        window.onload = function() {
+            startCountdown();
+            playAudio();
+        };
+        
+        // Audio toggle
+        toggleAudioButton.addEventListener('click', function() {
+            if (audioPlaying) {
+                organSound.pause();
+                whispersSound.pause();
+                toggleAudioButton.textContent = '🔇';
+                audioPlaying = false;
+            } else {
+                playAudio();
+                toggleAudioButton.textContent = '🔊';
+                audioPlaying = true;
+            }
+        });
+        
+        // Play audio function
+        function playAudio() {
+            organSound.play();
+            whispersSound.play();
+            audioPlaying = true;
+            toggleAudioButton.textContent = '🔊';
+            
+            // Schedule random thunder sounds
+            setInterval(function() {
+                if (Math.random() > 0.7 && audioPlaying) {
+                    thunderSound.currentTime = 0;
+                    thunderSound.play();
+                }
+            }, 10000);
+        }
+        
+        // Start countdown function
+        function startCountdown() {
+            let timeLeft = 30;
+            countdownTimer = setInterval(function() {
+                timeLeft--;
+                countdown.textContent = timeLeft;
+                
+                // When countdown reaches 0
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    showService();
+                }
+            }, 1000);
+        }
+        
+        // Show service content
+        function showService() {
+            initialScreen.classList.add('hidden');
+            serviceContent.classList.remove('hidden');
+            
+            // Trigger body flicker effect
+            document.body.classList.add('flicker');
+            setTimeout(() => {
+                document.body.classList.remove('flicker');
+            }, 1000);
+            
+            // Fade in elements gradually
+            setTimeout(() => {
+                guestList.style.opacity = 1;
+                
+                setTimeout(() => {
+                    eulogy.style.opacity = 1;
+                    
+                    // Play loud thunder for effect
+                    thunderSound.volume = 0.8;
+                    thunderSound.play();
+                    
+                }, 2000);
+            }, 2000);
+        }
+        
+        // Download button onclick
+        downloadButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Create text file content
+            const obituaryText = `
+OBITUARY: [Friend's Name]
+
+Born: Reluctantly
+Died: Only on the inside (so far)
+
+[Friend's Name] departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to procrastinate, their impressive collection of coffee mugs with varying levels of unknown substances growing inside them, and their persistent belief that tomorrow was a better day to do literally anything.
+
+They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 147 open tabs they were "definitely going to read later."
+
+In lieu of flowers, please send pizza and energy drinks to their final resting place (the couch).
+
+May they finally find the motivation in death that eluded them in life.
+
+Rest in procrastination, dear friend.
+`;
+            
+            // Create download link
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(obituaryText));
+            element.setAttribute('download', 'Final_Farewell_for_Friend.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+            
+            // Show reveal after download
+            setTimeout(showReveal, 2000);
+        });
+        
+        // Show reveal function
+        function showReveal() {
+            serviceContent.classList.add('hidden');
+            revealScreen.style.display = 'block';
+            
+            // Special audio effects for reveal
+            organSound.pause();
+            whispersSound.pause();
+            
+            // Play dramatic chord or effect here if you have one
+            
+            // Flash effect
+            document.body.classList.add('flicker');
+            setTimeout(() => {
+                document.body.classList.remove('flicker');
+            }, 2000);
+        }
+        
+        // Replay button
+        replayButton.addEventListener('click', function() {
+            window.location.reload();
+        });
+        
+        // Optional: Create the obituary text file on page load
+        function createObituaryFile() {
+            const obituaryText = `
+OBITUARY: [Friend's Name]
+
+Born: Reluctantly
+Died: Only on the inside (so far)
+
+[Friend's Name] departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to procrastinate, their impressive collection of coffee mugs with varying levels of unknown substances growing inside them, and their persistent belief that tomorrow was a better day to do literally anything.
+
+They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 147 open tabs they were "definitely going to read later."
+
+In lieu of flowers, please send pizza and energy drinks to their final resting place (the couch).
+
+May they finally find the motivation in death that eluded them in life.
+
+Rest in procrastination, dear friend.
+`;
+            
+            return obituaryText;
+        }
+    </script>
+</body>
+</html>
