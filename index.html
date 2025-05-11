@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memorial Service for [Friend's Name]</title>
+    <title>Memorial Service for CS 300lv Course Rep</title>
     <style>
         :root {
             --dark-bg: #0a0a0a;
@@ -201,7 +201,7 @@
 <body>
     <div class="container initial-screen">
         <h1>Memorial Service</h1>
-        <h2>for [Friend's Name]</h2>
+        <h2>for CS 300lv Course Rep</h2>
         
         <div class="candles">
             <div class="candle"></div>
@@ -210,28 +210,28 @@
         </div>
         
         <p>The ceremony will commence in:</p>
-        <div class="countdown" id="countdown">30</div>
+        <div class="countdown" id="countdown">15</div>
         
         <p>Please remain silent as we prepare to honor the departed</p>
     </div>
     
     <div class="container service-content hidden">
         <h1>We Are Gathered Here Today</h1>
-        <p>To commemorate the life and times of our dear friend, [Friend's Name],<br>who is no longer with us... spiritually speaking.</p>
+        <p>To commemorate the life and times of our dear friend, CS 300lv Course Rep,<br>who is no longer with us... spiritually speaking.</p>
         
         <div class="guest-list" id="guestList">
             <h3>In Attendance:</h3>
-            <div class="guest">• [Friend]'s mother, who always knew this day would come</div>
+            <div class="guest">• CS 300lv Course Rep's mother, who always knew this day would come</div>
             <div class="guest">• Jeff from Accounting, still waiting on those expense reports</div>
             <div class="guest">• The guy who thought this was a buffet</div>
             <div class="guest">• Three ex-partners arguing over who caused this</div>
-            <div class="guest">• [Friend]'s houseplant, somehow still alive</div>
+            <div class="guest">• CS 300lv Course Rep's houseplant, somehow still alive</div>
             <div class="guest">• The Grim Reaper (fashionably late)</div>
         </div>
         
         <div class="eulogy" id="eulogy">
             <h3>Eulogy</h3>
-            <p>[Friend's Name] lived as they died – mostly confused, occasionally inspired, and perpetually running late. They never met a deadline they couldn't miss or a pizza they couldn't finish. They survived countless all-nighters, questionable dating choices, and their own cooking, only to ultimately be defeated by everyday existence.</p>
+            <p>CS 300lv Course Rep lived as they died – mostly confused, occasionally inspired, and perpetually running late. They never met a deadline they couldn't miss or a pizza they couldn't finish. They survived countless all-nighters, questionable dating choices, and their own cooking, only to ultimately be defeated by everyday existence.</p>
             <p>Their legacy includes hundreds of unread emails, several half-finished projects, and that one weird tweet nobody understood. We will remember them every time someone makes a terrible pun or eats dessert before dinner – as they always insisted was the proper order of things.</p>
             <p>May they find in the afterlife what always eluded them in life: decent Wi-Fi and matching socks.</p>
         </div>
@@ -252,20 +252,77 @@
     </div>
 
     <script>
-        // Audio elements
-        const organSound = new Audio();
-        organSound.src = "https://freesound.org/data/previews/414/414604_5121236-lq.mp3"; // Replace with actual URLs
-        organSound.loop = true;
-        organSound.volume = 0.4;
-        
-        const whispersSound = new Audio();
-        whispersSound.src = "https://freesound.org/data/previews/169/169986_1326576-lq.mp3"; // Replace with actual URLs
-        whispersSound.loop = true;
-        whispersSound.volume = 0.2;
-        
-        const thunderSound = new Audio();
-        thunderSound.src = "https://freesound.org/data/previews/377/377749_5836292-lq.mp3"; // Replace with actual URLs
-        thunderSound.volume = 0.6;
+        // --- 1. SET UP AUDIO CONTEXT & NODES ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const ctx = new AudioContext();
+
+// Utility to load & decode a file, returning an AudioBuffer
+async function loadBuffer(url) {
+  const res = await fetch(url);
+  const arrayBuffer = await res.arrayBuffer();
+  return await ctx.decodeAudioData(arrayBuffer);
+}
+
+// Create a track: source + gain + pan
+async function createTrack(url, volume = 1, pan = 0) {
+  const buffer = await loadBuffer(url);
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+
+  const gainNode = ctx.createGain();
+  gainNode.gain.value = volume;
+
+  const panner = ctx.createStereoPanner();
+  panner.pan.value = pan;
+
+  source.connect(gainNode).connect(panner).connect(ctx.destination);
+  return source;
+}
+
+// --- 2. LOAD YOUR SAMPLES ---
+Promise.all([
+  createTrack('assets/creepy-organ-loop1.wav', 0.3,  0.0), // organ center
+  createTrack('assets/ghost-whispers.wav', 0.15, -0.5), // whispers left
+  createTrack('assets/ghostly-whispers.wav', 0.15, +0.5), // whispers right
+  loadBuffer('assets/thunder.wav')               // thunder buffer
+]).then(([organSrc, whisperL, whisperR, thunderBuf]) => {
+  
+  // Start continuous loops
+  organSrc.start();
+  whisperL.start();
+  whisperR.start();
+
+  // --- 3. SCHEDULE RANDOM THUNDER HITS ---
+  const thunderGain = ctx.createGain();
+  thunderGain.gain.value = 0.8;
+  const thunderPan  = ctx.createStereoPanner();
+  thunderPan.pan.value = 0;  
+  thunderGain.connect(thunderPan).connect(ctx.destination);
+
+  function playThunder() {
+    const thunderSrc = ctx.createBufferSource();
+    thunderSrc.buffer = thunderBuf;
+    thunderSrc.connect(thunderGain);
+    thunderSrc.start();
+  }
+  setInterval(() => { if (Math.random() > 0.7) playThunder(); }, 10000);
+
+  // Expose for your mute/unmute button:
+  window.audioNodes = { organSrc, whisperL, whisperR, thunderBuf, thunderGain };
+
+}).catch(console.error);
+
+// --- 4. MUTE / UNMUTE ---
+toggleAudioButton.addEventListener('click', () => {
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+    toggleAudioButton.textContent = '🔊';
+  } else {
+    ctx.suspend();
+    toggleAudioButton.textContent = '🔇';
+  }
+});
         
         // Global variables
         let countdownTimer;
@@ -318,7 +375,7 @@
         
         // Start countdown function
         function startCountdown() {
-            let timeLeft = 30;
+            let timeLeft = 15;
             countdownTimer = setInterval(function() {
                 timeLeft--;
                 countdown.textContent = timeLeft;
@@ -363,26 +420,26 @@
             
             // Create text file content
             const obituaryText = `
-OBITUARY: [Friend's Name]
+OBITUARY: CS 300lv Course Rep
 
-Born: Reluctantly
+Born: Reluctantly (In the stone age)
 Died: Only on the inside (so far)
 
-[Friend's Name] departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to procrastinate, their impressive collection of coffee mugs with varying levels of unknown substances growing inside them, and their persistent belief that tomorrow was a better day to do literally anything.
+Computer Science 300lv Course Rep departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to talk <b>OP</b>, their impressive lie about being older than everyone in the department, their persistent belief that tomorrow was a better day to do literally anything, and their ability to lie.
 
-They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 147 open tabs they were "definitely going to read later."
+They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 97 open <strong>PornHub</strong>tabs and other 20 opened tabs they were "definitely going to read later."
 
 In lieu of flowers, please send pizza and energy drinks to their final resting place (the couch).
 
 May they finally find the motivation in death that eluded them in life.
 
-Rest in procrastination, dear friend.
+Rest in procrastination, dear Course Rape.
 `;
             
             // Create download link
             const element = document.createElement('a');
             element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(obituaryText));
-            element.setAttribute('download', 'Final_Farewell_for_Friend.txt');
+            element.setAttribute('download', 'Final_Farewell_for_CS_300lv_Course_Rep.txt');
             element.style.display = 'none';
             document.body.appendChild(element);
             element.click();
@@ -418,20 +475,20 @@ Rest in procrastination, dear friend.
         // Optional: Create the obituary text file on page load
         function createObituaryFile() {
             const obituaryText = `
-OBITUARY: [Friend's Name]
+OBITUARY: CS 300lv Course Rep
 
-Born: Reluctantly
+Born: Reluctantly (In the stone age)
 Died: Only on the inside (so far)
 
-[Friend's Name] departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to procrastinate, their impressive collection of coffee mugs with varying levels of unknown substances growing inside them, and their persistent belief that tomorrow was a better day to do literally anything.
+Computer Science 300lv Course Rep departed from the world of productivity and social acceptability long before their actual demise. They will be remembered for their uncanny ability to talk <b>OP</b>, their impressive lie about being older than everyone in the department, their persistent belief that tomorrow was a better day to do literally anything, and their ability to lie.
 
-They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 147 open tabs they were "definitely going to read later."
+They leave behind numerous unfinished Netflix series, several houseplants in various stages of neglect, and a browser with 97 open <strong>PornHub</strong>tabs and other 20 opened tabs they were "definitely going to read later."
 
 In lieu of flowers, please send pizza and energy drinks to their final resting place (the couch).
 
 May they finally find the motivation in death that eluded them in life.
 
-Rest in procrastination, dear friend.
+Rest in procrastination, dear Course Rape.
 `;
             
             return obituaryText;
